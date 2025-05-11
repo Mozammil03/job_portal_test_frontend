@@ -1,11 +1,11 @@
 import { Button, Divider,PasswordInput, Radio, TextInput } from "@mantine/core"
 import { IconLock } from "@tabler/icons-react"
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"
-import { loginUser, registerUser } from "../services/UserService";
+import { registerUser } from "../services/UserService";
 import signUpValidation from "../services/FormValdiation";
 import { notifications } from "@mantine/notifications";
-import { UserContext } from "../App";
+
 
 enum AccountType {
   APPLICANT = 'APPLICANT',
@@ -35,7 +35,7 @@ export const SignUp = () => {
     }
   }
   
-  const {login, setLogin, user, setUser} = useContext(UserContext);
+ 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -55,8 +55,6 @@ export const SignUp = () => {
         setFormData({name: "", email: "", password: "", confirmPassword: "", accountType: AccountType.APPLICANT})
         
         setTimeout(()=>{
-          setLogin(true);
-          setUser(response);
           navigate("/profile");
           setLoading(false);
         },3000)

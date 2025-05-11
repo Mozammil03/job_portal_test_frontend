@@ -7,10 +7,10 @@ const NavLinks = () => {
         { name: "Find Talent", url: "find-talent" },
         { name: "Upload Job", url: "upload-job" },
         { name: "About Us", url: "about" },
-        { name:"Sign Up", url:"sign-up"},
     ];
 
     const location = useLocation();
+    
 
   return (
     <div className="flex items-center gap-4 text-white">

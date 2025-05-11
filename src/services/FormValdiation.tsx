@@ -24,6 +24,7 @@ const signUpValidation = (name:string, value:string) => {
             break;
         default:
             return "";
+        
             
     }
 } 

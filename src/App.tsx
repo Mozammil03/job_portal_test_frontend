@@ -3,24 +3,23 @@ import './App.css';
 import '@mantine/notifications/styles.css';
 import { createTheme, MantineProvider} from '@mantine/core';
 import '@mantine/core/styles.css'
-import HomePage from './Pages/HomePage';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import FindJobs from './Pages/FindJobs';
+import { BrowserRouter } from 'react-router-dom';
 import Header from './header/Header';
 import Footer from './footer/Footer';
-import SignUpPage from './Pages/SignUpPage';
-import { Profile } from './Pages/Profile';
-import { createContext, useState } from 'react';
+
 import { Notifications } from '@mantine/notifications';
 
-export const UserContext = createContext({} as any);
+import { Provider } from 'react-redux';
+import Store from './Store';
+import AppRoutes from './Util/AppRoutes';
 
-const userData =  {  
-        name: "",
-        email: "",
-        password: "",
-        accountType: ""
-  }
+
+// const userData =  {  
+//         name: "",
+//         email: "",
+//         password: "",
+//         accountType: ""
+//   }
 function App() {
   const theme = createTheme({
     colors:{
@@ -53,28 +52,25 @@ function App() {
 
     }
   })
-  const [user, setUser] = useState(userData);
-  const [Login, setLogin] = useState(false);
+  // const [user, setUser] = useState(userData);
+  // const [Login, setLogin] = useState(false);
   
 
 
   return (
+    <Provider store={Store}>
     <MantineProvider defaultColorScheme='dark' theme={theme}>
       <Notifications position="top-right" zIndex={1000} style={{width:"auto"}}/>
-      <UserContext.Provider value={{user, setUser, Login, setLogin}}>
+      {/* <UserContext.Provider value={{user, setUser, Login, setLogin}}> */}
+
       <BrowserRouter>
       <Header/>
-      <Routes>
-        <Route path='/find-jobs' element={<FindJobs/>} />
-        <Route path='/sign-up' element={<SignUpPage/>} />
-        <Route path='/sign-in' element={<SignUpPage/>} />
-        <Route path='/profile' element={<Profile/>} />
-        <Route path='*' element={<HomePage />} />
-      </Routes>
+      <AppRoutes/>
       <Footer/>
       </BrowserRouter>
-      </UserContext.Provider>
+      {/* </UserContext.Provider> */}
     </MantineProvider>
+    </Provider>
   );
 }
 

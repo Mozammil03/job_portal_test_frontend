@@ -1,10 +1,12 @@
 import { Button, Divider, PasswordInput, TextInput } from "@mantine/core"
 import { IconLock } from "@tabler/icons-react"
-import { useContext, useState } from "react"
+import {useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { loginUser } from "../services/UserService"
-import { UserContext } from "../App"
+// import { UserContext } from "../App"
 import { notifications } from "@mantine/notifications"
+import { useDispatch, useSelector } from "react-redux"
+import { setUser } from "../Slices/UserSlice"
 
 
 const form = {
@@ -13,12 +15,14 @@ const form = {
    
 }
 const SignIn = () => {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(form);
-  const {Login, setLogin} = useContext(UserContext);
-  const {user, setUser} = useContext(UserContext);
+  
   const navigate = useNavigate();
 
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
+    setLoading(true);
     event.preventDefault();
     if (!formData.email || !formData.password) {
       alert('Please fill in all fields');
@@ -28,20 +32,24 @@ const SignIn = () => {
     try {
       const response = await loginUser(formData);
       if (response.ok) {
-        setLogin(true)
+        
 
         console.log('Login successful' + response);
 
         const userData = await response.json();
-        setUser(userData);
-        navigate('/profile');
+        
+        setTimeout(()=>{
+          dispatch(setUser(userData))
+          setLoading(false);
+          navigate('/profile');
+        }, 2000)
+        
         console.log(userData);
         notifications.show({
                   title: 'Login Successful',
                   message: `Welcome ${userData.name}`,
                   color: 'green',
                 });
-
       }
     } catch (error: any) {
       
@@ -61,7 +69,7 @@ const SignIn = () => {
         console.error(error);
         notifications.show({
                   title: 'Error Logging In',
-                  message: `${error.errorMessage}`,
+                  message: `${error.errorMessage?error.errorMessage:error}`,
                   color: 'red',
                 });
       }
@@ -88,7 +96,8 @@ const SignIn = () => {
           placeholder="" 
         />
         
-        <Button onClick={handleClick} className="w-full mt-4" variant="outline" color="brightSun.4">Sign In</Button>
+        <Button loading={loading} onClick={handleClick} className="w-full mt-4" variant="outline" color="brightSun.4">Sign In</Button>
+        <div><Link to={'/change-password'}>Forgot password </Link></div>
         <div>Don't Have an Account/ <Link to={"/sign-up"} className="text-bright-sun-400">Sign Up</Link></div>
       </div>
     </div>
